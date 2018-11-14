@@ -60,13 +60,11 @@ for data in Pdata['entry']:
     medications.append(data['resource']['code']['coding'][0]['display'])
     #pprint.pprint(data['resource'])
   elif resource_type == 'AllergyIntolerance' :
-    pprint.pprint(data['resource'])
+    #pprint.pprint(data['resource'])
     
     allergy = data['resource']['code']['coding'][0]['display']
     reaction = data['resource']['reaction'][0]['manifestation'][0]['coding'][0]['display']
     allergies.append((allergy, reaction))
-    #allergies.append(data['resource']['code']['coding'][0]['display'])
-    #allergies.append(data['resource']['reaction'][0]['manifestation'][0]['coding'][0]['display'])
   elif resource_type == 'Patient' :
     #pprint.pprint(data['resource'])
     patient_details = {}
@@ -76,6 +74,13 @@ for data in Pdata['entry']:
     
 
 print ('---')
+print ('DEMOGRAPHICS:')
 pprint.pprint(patient_details)
-pprint.pprint(medications)
-pprint.pprint(allergies)
+print (" ")
+print ('MEDICATIONS:')
+for med in medications:
+  print ('-' + med)
+print (" ")
+print ('ALLERGIES:')
+for allergy in allergies:
+  print (allergy)
