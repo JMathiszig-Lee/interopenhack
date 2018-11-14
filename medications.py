@@ -1,6 +1,7 @@
 import requests
 import json
 import pprint
+nhsno = '9658218881'
 
 headers = {
   'accept': 'application/fhir+json',
@@ -18,7 +19,7 @@ payload = {
       "name": "patientNHSNumber",
       "valueIdentifier": {
         "system": "https://fhir.nhs.uk/Id/nhs-number",
-        "value": "9658218873"
+        "value": nhsno
       }
     },
     {
@@ -45,7 +46,7 @@ payload = {
     }
   ]
 }
-nhsno = '9658218873'
+
 url = 'https://orange.testlab.nhs.uk/gpconnect-demonstrator/v1/fhir/Patient/$gpc.getstructuredrecord'
 
 
@@ -54,13 +55,27 @@ Pdata = json.loads(r.text)
 medications = []
 allergies = []
 for data in Pdata['entry']:
-  if data['resource']['resourceType'] == 'Medication' :
+  resource_type = data['resource']['resourceType'] 
+  if resource_type == 'Medication' :
     medications.append(data['resource']['code']['coding'][0]['display'])
     #pprint.pprint(data['resource'])
-  elif data['resource']['resourceType'] == 'AllergyIntolerance' :
-    allergies.append(data['resource']['code']['coding'][0]['display'])
+  elif resource_type == 'AllergyIntolerance' :
+    pprint.pprint(data['resource'])
+    
+    allergy = data['resource']['code']['coding'][0]['display']
+    reaction = data['resource']['reaction'][0]['manifestation'][0]['coding'][0]['display']
+    allergies.append((allergy, reaction))
+    #allergies.append(data['resource']['code']['coding'][0]['display'])
+    #allergies.append(data['resource']['reaction'][0]['manifestation'][0]['coding'][0]['display'])
+  elif resource_type == 'Patient' :
+    #pprint.pprint(data['resource'])
+    patient_details = {}
+    patient_details['dob'] = data['resource']['birthDate']
+    patient_details['firstname'] = data['resource']['name'][0]['given'][0]
+    patient_details['surname'] = data['resource']['name'][0]['family']
     
 
-print ('---')    
+print ('---')
+pprint.pprint(patient_details)
 pprint.pprint(medications)
-print(allergies)
+pprint.pprint(allergies)
