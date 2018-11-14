@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 fhirclient = "*"
 flask = "*"
+requests = "*"
 
 [dev-packages]
 
